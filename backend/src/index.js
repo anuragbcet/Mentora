@@ -3,6 +3,11 @@ import adminRoute from "./routes/admin.js";
 import userRouter from "./routes/user.js";
 import mongoose from "mongoose";
 import courseRouter from "./routes/course.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const mongoURI = process.env.MONGO_URL;
 
 const app = express();
 
@@ -11,9 +16,14 @@ const Port = 3000;
 app.use(express.json());
 async function main() {
   try {
-    await mongoose.connect(
-      "mongodb+srv://anuragbcet2023:JXyRfAUNCkJPhkG5@cluster0.bzaysuc.mongodb.net/mentora"
-    );
+      await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      // Add other Mongoose connection options as needed
+    });
+    console.log('MongoDB connected successfully!');
+
+
     app.use("/api/v1/user", userRouter);
     app.use("/api/v1/admin", adminRoute);
     app.use("/api/v1/course", courseRouter);
