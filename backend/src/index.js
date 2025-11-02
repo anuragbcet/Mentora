@@ -16,11 +16,10 @@ const Port = 3000;
 app.use(express.json());
 async function main() {
   try {
-      await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      await mongoose.connect(mongoURI
+     
       // Add other Mongoose connection options as needed
-    });
+    );
     console.log('MongoDB connected successfully!');
 
 
