@@ -4,14 +4,18 @@ import userRouter from "./routes/user.js";
 import mongoose from "mongoose";
 import courseRouter from "./routes/course.js";
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
+
 
 const mongoURI = process.env.MONGO_URL;
 
 const app = express();
 
 const Port = 3000;
+
+app.use(cors());
 
 app.use(express.json());
 async function main() {

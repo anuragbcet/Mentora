@@ -1,6 +1,7 @@
 import express from "express";
-import { adminModel } from "../db.js";
+import { adminModel, courseModel } from "../db.js";
 import jwt from "jsonwebtoken";
+import adminMiddleware from "../middleware/admin.js";
 
 const JWT_ADMIN_SECRET="skjgdkgfsjkb";
 
@@ -45,11 +46,55 @@ adminRoute.post("/signin", (req, res) => {
     }
 });
 
-adminRoute.put("/course", (req, res) => {
-  res.json({ message: "Route to add the new course" });
+adminRoute.post("/course",adminMiddleware, async (req, res) => {
+
+    const adminId = req.userId;
+    const {title,description,price,imgUrl} = req.body;
+    
+    const course=await courseModel.create({
+        title:title,
+        description:description,
+        price:price,
+        imgUrl:imgUrl,
+        creatorId:adminId
+    })
+
+    res.json({
+        message:"course created",
+        courseId:course._id
+    })
 });
 
+adminRoute.put('/course',adminMiddleware, async (req,res)=>{
+    const adminId =req.userId;
+     const {title,description,price,imgUrl,courseId} = req.body;
+
+    const course =await courseModel.updateOne({
+        _id:courseId,
+        creatorId:adminId
+    },{
+        title:title,
+        description:description,
+        price:price,
+        imgUrl:imgUrl
+
+    })
+
+   res.json({
+    message:"course updated",
+    courseId:course._id
+   })
+
+})
+
 adminRoute.get("/course/bulk", (req, res) => {
-  res.json({ message: "all the course for the current instructure listed" });
+    const adminId=req.userId;
+
+    const course = courseModel.find({
+        creatorId:adminId
+    });
+
+    res.status(201).json(course);
+  
 });
 export default adminRoute;
