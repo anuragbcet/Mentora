@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../config.js";
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -10,7 +11,7 @@ const CourseList = () => {
     const fetchCourses = async () => {
       try {
         // 👇 Replace this URL with your backend endpoint
-        const response = await axios.get("http://localhost:3000/api/v1/course/bulk");
+        const response = await axios.get(`${BACKEND_URL}/api/v1/course/bulk`);
         setCourses(response.data.courses);
       } catch (err) {
         console.error(err);
@@ -36,7 +37,7 @@ const CourseList = () => {
           gap: "1rem",
         }}
       >
-        {courses.map((course) => (
+        {courses?.map((course) => (
           <div
             key={course._id}
             style={{
